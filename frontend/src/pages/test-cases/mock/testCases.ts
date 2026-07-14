@@ -1,0 +1,57 @@
+import type { TestCase } from "@/types/test-case";
+
+export const testCases: TestCase[] = [
+  {
+    id: 1,
+    testCaseId: "MIR_001",
+    projectId: 1,
+    module: "Settings",
+    featureDescription: "Verify Gateway URL Configuration",
+    preRequisite: "Mirror installed",
+    expectedResult: "Gateway connection successful",
+    actualResult: "",
+    comments: "",
+    priority: "High",
+    status: "Ready",
+    automation: "Manual",
+    createdAt: "2026-07-15",
+    updatedAt: "2026-07-15",
+    steps: [
+      {
+        id: 1,
+        stepNumber: 1,
+        action: "Launch Mirror",
+        expectedResult: "Application opens",
+      },
+      {
+        id: 2,
+        stepNumber: 2,
+        action: "Open Settings",
+        expectedResult: "Settings page displayed",
+      },
+      {
+        id: 3,
+        stepNumber: 3,
+        action: "Enter Gateway URL",
+        expectedResult: "Gateway URL accepted",
+      },
+    ],
+  },
+  {
+    id: 2,
+    testCaseId: "MIR_002",
+    projectId: 1,
+    module: "Authentication",
+    featureDescription: "Verify Login",
+    preRequisite: "Valid user account",
+    expectedResult: "User logged in",
+    actualResult: "",
+    comments: "",
+    priority: "Critical",
+    status: "Ready",
+    automation: "Manual",
+    createdAt: "2026-07-15",
+    updatedAt: "2026-07-15",
+    steps: [],
+  },
+];
