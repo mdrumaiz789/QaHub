@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./qahub.db"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -14,4 +14,50 @@ model User {
   fullName  String
   role      String   @default("Admin")
   createdAt DateTime @default(now())
+  projects  Project[]
+}
+
+model Project {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ownerId     Int
+  owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  testCases   TestCase[]
+}
+
+model TestCase {
+  id             Int              @id @default(autoincrement())
+  title          String
+  description    String?
+  preconditions  String?
+  steps          String
+  expectedResult String
+  priority       TestCasePriority @default(MEDIUM)
+  status         TestCaseStatus   @default(DRAFT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  projectId      Int
+  project        Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum TestCasePriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TestCaseStatus {
+  DRAFT
+  READY
+  ARCHIVED
 }
