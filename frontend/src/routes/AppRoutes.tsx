@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "../Home";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 
@@ -14,10 +13,14 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
 
+        {/* Redirect root directly to Login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Authentication */}
         <Route path="/login" element={<Login />} />
 
+        {/* Protected Application */}
         <Route
           path="/dashboard"
           element={
@@ -28,7 +31,10 @@ function AppRoutes() {
         >
           <Route index element={<Navigate to="test-cases" replace />} />
 
-          <Route path="test-cases" element={<TestCasesPage />} />
+          <Route
+            path="test-cases"
+            element={<TestCasesPage />}
+          />
 
           <Route
             path="test-cases/:testCaseId"
@@ -39,7 +45,9 @@ function AppRoutes() {
             path="test-cases/import"
             element={<ImportTestCasesPage />}
           />
+
         </Route>
+
       </Routes>
     </BrowserRouter>
   );
