@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import {
   ArrowUpRight,
   Bot,
   Bug,
-  ChevronRight,
   ClipboardCheck,
   FolderKanban,
   LayoutDashboard,
   LogOut,
-  PlayCircle,
-  Plus,
+  PlayCircle
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
@@ -105,16 +103,7 @@ function Dashboard() {
       automationCoverage: 0,
     });
 
-
-  const [name, setName] = useState("");
-
-  const [description, setDescription] = useState("");
-
-  const [isLoading, setIsLoading] =
-    useState(true);
-
-  const [isCreating, setIsCreating] =
-    useState(false);
+  const [, setIsLoading] = useState(true);
 
   const [error, setError] =
     useState("");
@@ -271,60 +260,6 @@ function Dashboard() {
     }
 
   },[selectedProject]);
-
-    const createProject = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-
-    event.preventDefault();
-
-    setError("");
-    setIsCreating(true);
-
-
-    try {
-
-      const result =
-        await request(
-          "/api/projects",
-          {
-            method:"POST",
-            body:JSON.stringify({
-              name,
-              description,
-            }),
-          }
-        );
-
-
-      setProjects((current)=>[
-        result.data.project,
-        ...current,
-      ]);
-
-
-      setName("");
-      setDescription("");
-
-
-    } catch(error){
-
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Unable to create project"
-      );
-
-
-    } finally {
-
-      setIsCreating(false);
-
-    }
-
-  };
-
-
 
   const logout = () => {
 
@@ -912,12 +847,12 @@ function Metric({
   value,
   icon,
   tone
-}:{
-  label:string;
-  value:string;
-  icon:ReactNode;
-  tone:string;
-}){
+}: {
+  label: string;
+  value: string;
+  icon: ReactNode;
+  tone: string;
+}) {
 
 
 return (
@@ -941,12 +876,21 @@ justify-between
 </p>
 
 
-<div className="
-rounded-xl
-bg-indigo-50
-p-2
-text-indigo-600
-">
+<div
+  className={`
+    rounded-xl
+    p-2
+    ${
+      tone === "rose"
+        ? "bg-rose-50 text-rose-600"
+        : tone === "violet"
+        ? "bg-violet-50 text-violet-600"
+        : tone === "sky"
+        ? "bg-sky-50 text-sky-600"
+        : "bg-indigo-50 text-indigo-600"
+    }
+  `}
+>
 
 {icon}
 
