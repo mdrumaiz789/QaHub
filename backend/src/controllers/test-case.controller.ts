@@ -1,7 +1,15 @@
 import type { Request, Response } from "express";
 import { ZodError } from "zod";
-import { getProjectForOwner, importTestCases, listTestCases } from "../services/test-case.service";
-import { importTestCasesSchema } from "../validators/test-case.validator";
+import {
+  createTestCase,
+  getProjectForOwner,
+  importTestCases,
+  listTestCases,
+} from "../services/test-case.service";
+import {
+  importTestCasesSchema,
+  testCaseInputSchema,
+} from "../validators/test-case.validator";
 
 const projectIdFrom = (req: Request) => Number(req.params.projectId);
 
@@ -45,5 +53,47 @@ export const postTestCaseImport = async (req: Request, res: Response) => {
       });
     }
     return res.status(500).json({ success: false, message: "Unable to import test cases" });
+  }
+};
+
+export const postTestCase = async (req: Request, res: Response) => {
+  const project = await getOwnedProject(req, res);
+  if (!project) return;
+
+  try {
+    const testCase = testCaseInputSchema.parse(req.body);
+
+    const result = await createTestCase(
+      project.id,
+      testCase
+    );
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        testCase: result,
+      },
+    });
+
+  } catch (error) {
+
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        success: false,
+        message:
+          error.issues[0]?.message ??
+          "Invalid test case data",
+      });
+    }
+
+    console.error("CREATE TEST CASE ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to create test case",
+    });
   }
 };

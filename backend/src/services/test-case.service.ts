@@ -19,7 +19,26 @@ type TestCaseImport = {
   priority: TestCasePriority;
 };
 
-export const importTestCases = (projectId: number, testCases: TestCaseImport[]) =>
+export const createTestCase = (
+  projectId: number,
+  testCase: TestCaseImport
+) =>
+  prisma.testCase.create({
+    data: {
+      projectId,
+      title: testCase.title,
+      description: testCase.description || null,
+      preconditions: testCase.preconditions || null,
+      steps: testCase.steps,
+      expectedResult: testCase.expectedResult,
+      priority: testCase.priority,
+    },
+  });
+
+export const importTestCases = (
+  projectId: number,
+  testCases: TestCaseImport[]
+) =>
   prisma.testCase.createMany({
     data: testCases.map((testCase) => ({
       projectId,
